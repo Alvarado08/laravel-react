@@ -1,3 +1,4 @@
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -16,13 +17,14 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ProductForm() {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, errors } = useForm({
         name: '',
         description: '',
         price: '',
         image: null as File | null,
     });
 
+    // Form submit handler
     const submit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         post(route('products.store'), {
@@ -30,6 +32,14 @@ export default function ProductForm() {
                 console.log('success');
             },
         });
+    };
+
+    // File upload handler
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setData('image', file);
+        }
     };
 
     return (
@@ -59,6 +69,7 @@ export default function ProductForm() {
                                         placeholder="Box"
                                         tabIndex={1}
                                     />
+                                    <InputError message={errors.name} />
                                 </div>
                                 {/* Description */}
                                 <div className="flex flex-col space-y-1.5">
@@ -73,6 +84,7 @@ export default function ProductForm() {
                                         tabIndex={2}
                                         className={'rounded-md p-3 outline outline-white/10 focus-visible:outline-white/20'}
                                     />
+                                    <InputError message={errors.description} />
                                 </div>
                                 {/* Price */}
                                 <div className="flex flex-col space-y-1.5">
@@ -86,11 +98,13 @@ export default function ProductForm() {
                                         placeholder="100"
                                         tabIndex={3}
                                     />
+                                    <InputError message={errors.price} />
                                 </div>
                                 {/* Image */}
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="image">Image</Label>
-                                    <Input id="image" name="image" type="file" tabIndex={4} />
+                                    <Input onChange={handleFileUpload} id="image" name="image" type="file" tabIndex={4} />
+                                    <InputError message={errors.image} />
                                 </div>
                                 <Button type="submit" className="mt-4 w-fit cursor-pointer" tabIndex={5}>
                                     Create Product
