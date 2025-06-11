@@ -48,6 +48,9 @@ class ProductController extends Controller
                 'description' => $request->description,
                 'price' => $request->price,
                 'image' => $image,
+                'category' => $request->category,
+                'brand' => $request->brand,
+                'stock' => $request->stock,
             ]);
 
             if ($product) {

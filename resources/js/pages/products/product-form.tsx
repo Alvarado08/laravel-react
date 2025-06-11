@@ -21,6 +21,9 @@ export default function ProductForm() {
         name: '',
         description: '',
         price: '',
+        category: '',
+        brand: '',
+        stock: '',
         image: null as File | null,
     });
 
@@ -86,6 +89,20 @@ export default function ProductForm() {
                                     />
                                     <InputError message={errors.description} />
                                 </div>
+                                {/* Stock */}
+                                <div className="flex flex-col space-y-1.5">
+                                    <Label htmlFor="stock">Stock</Label>
+                                    <Input
+                                        value={data.stock}
+                                        onChange={(e) => setData('stock', e.target.value)}
+                                        id="stock"
+                                        name="stock"
+                                        type="number"
+                                        placeholder="100"
+                                        tabIndex={3}
+                                    />
+                                    <InputError message={errors.stock} />
+                                </div>
                                 {/* Price */}
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="price">Price</Label>
@@ -96,17 +113,45 @@ export default function ProductForm() {
                                         name="price"
                                         type="number"
                                         placeholder="100"
-                                        tabIndex={3}
+                                        tabIndex={4}
                                     />
                                     <InputError message={errors.price} />
+                                </div>
+                                {/* Category */}
+                                <div className="flex flex-col space-y-1.5">
+                                    <Label htmlFor="category">Category</Label>
+                                    <Input
+                                        value={data.category}
+                                        onChange={(e) => setData('category', e.target.value)}
+                                        id="category"
+                                        name="category"
+                                        type="text"
+                                        placeholder="Category"
+                                        tabIndex={5}
+                                    />
+                                    <InputError message={errors.category} />
+                                </div>
+                                {/* Brand */}
+                                <div className="flex flex-col space-y-1.5">
+                                    <Label htmlFor="brand">Brand</Label>
+                                    <Input
+                                        value={data.brand}
+                                        onChange={(e) => setData('brand', e.target.value)}
+                                        id="brand"
+                                        name="brand"
+                                        type="text"
+                                        placeholder="Brand"
+                                        tabIndex={6}
+                                    />
+                                    <InputError message={errors.brand} />
                                 </div>
                                 {/* Image */}
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="image">Image</Label>
-                                    <Input onChange={handleFileUpload} id="image" name="image" type="file" tabIndex={4} />
+                                    <Input onChange={handleFileUpload} id="image" name="image" type="file" tabIndex={7} />
                                     <InputError message={errors.image} />
                                 </div>
-                                <Button type="submit" className="mt-4 w-fit cursor-pointer" tabIndex={5}>
+                                <Button type="submit" className="mt-4 w-fit cursor-pointer" tabIndex={8}>
                                     Create Product
                                 </Button>
                             </div>

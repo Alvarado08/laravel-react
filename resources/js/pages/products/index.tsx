@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Products',
@@ -10,9 +12,29 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ProductsIndex() {
+    const { flash } = usePage<{ flash?: { success?: string; error?: string } }>().props;
+    useEffect(() => {
+        if (flash?.success) {
+            toast.success(flash.success);
+        }
+        if (flash?.error) {
+            toast.error(flash.error);
+        }
+    }, [flash]);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Products" />
+            {(flash?.success || flash?.error) && (
+                <ToastContainer
+                    autoClose={4000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    rtl={false}
+                    pauseOnFocusLoss={false}
+                    pauseOnHover={false}
+                />
+            )}
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <h1 className="text-2xl font-bold">My Products</h1>
                 <div className="mb-4 flex justify-end">

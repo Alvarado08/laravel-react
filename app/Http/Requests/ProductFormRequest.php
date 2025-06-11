@@ -25,7 +25,10 @@ class ProductFormRequest extends FormRequest
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'category' => 'nullable|string',
+            'brand' => 'nullable|string',
+            'stock' => 'required|integer|min:0',
         ];
     }
 
@@ -40,9 +43,13 @@ class ProductFormRequest extends FormRequest
             'name.required' => 'The name field is required.',
             'description.required' => 'The description field is required.',
             'price.required' => 'The price field is required.',
-            'image.image' => 'The image must be an image.',
             'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif, svg.',
             'image.max' => 'The image may not be greater than 2048 kilobytes.',
+            'category.string' => 'The category field must be a string.',
+            'brand.string' => 'The brand field must be a string.',
+            'stock.required' => 'The stock field is required.',
+            'stock.integer' => 'The stock field must be an integer.',
+            'stock.min' => 'The stock field must be greater than 0.',
         ];
     }
 }
