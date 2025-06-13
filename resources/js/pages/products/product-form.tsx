@@ -7,23 +7,24 @@ import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Textarea } from '@headlessui/react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { FormEvent } from 'react';
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Create Product',
-        href: '/products/create',
-    },
-];
 
-export default function ProductForm() {
-    const { data, setData, post, errors } = useForm({
-        name: '',
-        description: '',
-        price: '',
-        category: '',
-        brand: '',
-        stock: '',
+export default function ProductForm({ ...props }) {
+    const { product, isView, isEdit } = props;
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: `${isView ? 'Show Product' : isEdit ? 'Edit Product' : 'Create Product'}`,
+            href: '/products/create',
+        },
+    ];
+    const { data, setData, post, errors, processing } = useForm({
+        name: product?.name || '',
+        description: product?.description || '',
+        price: product?.price || '',
+        category: product?.category || '',
+        brand: product?.brand || '',
+        stock: product?.stock || '',
         image: null as File | null,
     });
 
@@ -55,7 +56,7 @@ export default function ProductForm() {
                 </Link>
                 <Card>
                     <CardHeader>
-                        <CardTitle>Create Product</CardTitle>
+                        <CardTitle>{isView ? 'Show' : isEdit ? 'Edit' : 'Create'} Product</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={submit} className="flex flex-col gap-4" autoComplete="off">
@@ -71,6 +72,7 @@ export default function ProductForm() {
                                         type="text"
                                         placeholder="Box"
                                         tabIndex={1}
+                                        disabled={isView || processing}
                                     />
                                     <InputError message={errors.name} />
                                 </div>
@@ -85,7 +87,8 @@ export default function ProductForm() {
                                         placeholder="Describe your product"
                                         rows={4}
                                         tabIndex={2}
-                                        className={'rounded-md p-3 outline outline-white/10 focus-visible:outline-white/20'}
+                                        className={`rounded-md p-3 outline outline-white/10 focus-visible:outline-white/20 ${isView ? 'text-muted-foreground cursor-default outline-white/2' : ''}`}
+                                        disabled={isView || processing}
                                     />
                                     <InputError message={errors.description} />
                                 </div>
@@ -100,6 +103,7 @@ export default function ProductForm() {
                                         type="number"
                                         placeholder="100"
                                         tabIndex={3}
+                                        disabled={isView || processing}
                                     />
                                     <InputError message={errors.stock} />
                                 </div>
@@ -114,6 +118,7 @@ export default function ProductForm() {
                                         type="number"
                                         placeholder="100"
                                         tabIndex={4}
+                                        disabled={isView || processing}
                                     />
                                     <InputError message={errors.price} />
                                 </div>
@@ -128,6 +133,7 @@ export default function ProductForm() {
                                         type="text"
                                         placeholder="Category"
                                         tabIndex={5}
+                                        disabled={isView || processing}
                                     />
                                     <InputError message={errors.category} />
                                 </div>
@@ -142,18 +148,39 @@ export default function ProductForm() {
                                         type="text"
                                         placeholder="Brand"
                                         tabIndex={6}
+                                        disabled={isView || processing}
                                     />
                                     <InputError message={errors.brand} />
                                 </div>
                                 {/* Image */}
-                                <div className="flex flex-col space-y-1.5">
-                                    <Label htmlFor="image">Image</Label>
-                                    <Input onChange={handleFileUpload} id="image" name="image" type="file" tabIndex={7} />
-                                    <InputError message={errors.image} />
-                                </div>
-                                <Button type="submit" className="mt-4 w-fit cursor-pointer" tabIndex={8}>
-                                    Create Product
-                                </Button>
+                                {!isView && (
+                                    <div className="flex flex-col space-y-1.5">
+                                        <Label htmlFor="image">Image</Label>
+                                        <Input
+                                            onChange={handleFileUpload}
+                                            id="image"
+                                            name="image"
+                                            type="file"
+                                            tabIndex={7}
+                                            disabled={isView || processing}
+                                        />
+                                        <InputError message={errors.image} />
+                                    </div>
+                                )}
+                                {/* Show Image when view or edit */}
+                                {(isView || isEdit) && (
+                                    <div className="flex flex-col space-y-1.5">
+                                        <Label htmlFor="image">Image</Label>
+                                        <img src={`/${product?.image}`} alt={product?.name} className="size-48 object-cover" />
+                                    </div>
+                                )}
+                                {/* Submit Button */}
+                                {(!isView || isEdit) && (
+                                    <Button type="submit" className="mt-4 w-fit cursor-pointer" tabIndex={8}>
+                                        {processing && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+                                        {processing ? (isEdit ? 'Updating...' : 'Creating...') : isEdit ? 'Update' : 'Create'} Product
+                                    </Button>
+                                )}
                             </div>
                         </form>
                     </CardContent>
